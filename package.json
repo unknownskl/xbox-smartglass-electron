@@ -24,6 +24,6 @@
   "build": {
     "appId": "com.unknownskl.xbox-one-electron",
     "productName": "Xbox-One Electron",
-    "copyright": "MIT",
+    "copyright": "MIT"
   }
 }
