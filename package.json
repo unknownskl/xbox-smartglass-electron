@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "DEBUG=smartglass:* electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -13,6 +13,6 @@
     "electron": "^5.0.2"
   },
   "dependencies": {
-    "xbox-smartglass-core-node": "^0.5.0"
+    "xbox-smartglass-core-node": "^0.6.1"
   }
 }
