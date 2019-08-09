@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Xbox Smartglass</title>
+
+    <link rel="stylesheet" href="./assets/app.css" />
+  </head>
+  <body>
+
+    <div id="topbar">
+
+    </div>
+
+    <div id="sidebar">
+        <ul class="options">
+            <li><a href="#" onclick="App.scan()">Scan</a></li>
+        </ul>
+
+        <ul class="consoles" id="consoleList">
+        </ul>
+    </div>
+
+    <div id="content">
+        <h1>Status: <span id="connectionStatus">Not Connected</span></h1>
+
+        <p id="currentApp">Not connected...</p>
+    </div>
+
+    <script>
+      // You can also require other files to run in this process
+      var App = require('./renderer.js')
+    </script>
+
+  </body>
+</html>
