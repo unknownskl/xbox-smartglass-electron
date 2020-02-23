@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "DEBUG=smartglass:* electron .",
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "run-os",
     "build:win32": "electron-builder --win",
@@ -19,7 +19,8 @@
     "electron-builder": "^21.2.0"
   },
   "dependencies": {
-    "xbox-smartglass-core-node": "^0.6.1"
+    "xbox-smartglass-core-node": "^0.6.3",
+    "xbox-webapi": "^0.1.1"
   },
   "build": {
     "appId": "com.unknownskl.xbox-one-electron",

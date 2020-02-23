@@ -1,2 +1,4 @@
 node_modules
 dist
+.tokens.json
+www/assets/template-app

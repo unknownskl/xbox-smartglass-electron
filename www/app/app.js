@@ -3,11 +3,21 @@ var SystemInputChannel = require('xbox-smartglass-core-node/src/channels/systemi
 var SystemMediaChannel = require('xbox-smartglass-core-node/src/channels/systemmedia')
 var TvRemoteChannel = require('xbox-smartglass-core-node/src/channels/tvremote')
 
+var XboxApiClient = require('xbox-webapi');
+var TokenStore = require('xbox-webapi/src/tokenstore.js');
+
+const querystring = require('querystring');
+var shell = require('electron').shell;
+
 module.exports = {
 
     _sgClient: false,
+    _authWindow: false,
 
     start: function(){
+
+        this.loadUser()
+        this.scan()
 
         document.onkeydown = function(evt) {
             evt = evt || window.event;
@@ -74,7 +84,7 @@ module.exports = {
 
     scan: function(){
         var sgClient = new Smartglass();
-        document.getElementById('consoleList').innerHTML = 'Searching...';
+        document.getElementById('consoleList').innerHTML = '<a class="nav-group-item"><span class="icon icon-arrows-ccw"></span> Searching...</a>';
 
         sgClient.discovery().then(function(consoles){
             document.getElementById('consoleList').innerHTML = '';
@@ -83,14 +93,22 @@ module.exports = {
                 console.log('- Device found: ' + consoles[xbox].message.name);
                 console.log('  Address: '+ consoles[xbox].remote.address + ':' + consoles[xbox].remote.port);
 
-                var li = document.createElement("li");
-                li.setAttribute("onclick", 'App.connect(\''+consoles[xbox].remote.address+'\')')
-                li.appendChild(document.createTextNode(consoles[xbox].message.name));
+                var button = document.createElement("a");
+                button.setAttribute("onclick", 'this.setAttribute("class", "nav-group-item active"); App.connect("'+consoles[xbox].remote.address+'");')
+                button.setAttribute("class", 'nav-group-item')
+                button.innerHTML = '<span class="icon icon-home"></span>'
+                button.appendChild(document.createTextNode(consoles[xbox].message.name));
 
-                document.getElementById('consoleList').append(li)
+                document.getElementById('consoleList').append(button)
             }
             if(consoles.length == 0){
-                document.getElementById('consoleList').innerHTML = 'No consoles found';
+                var button = document.createElement("a");
+                // button.setAttribute("onclick", 'this.setAttribute("class", "nav-group-item active"); App.connect("'+consoles[xbox].remote.address+'");')
+                button.setAttribute("class", 'nav-group-item')
+                button.innerHTML = '<span class="icon icon-cancel"></span>'
+                button.appendChild(document.createTextNode('No consoles found'));
+
+                document.getElementById('consoleList').append(button)
 
                 console.log('No consoles found on the network')
             }
@@ -99,10 +117,14 @@ module.exports = {
         });
     },
 
+    // disconnect: function(){
+    //     this._sgClient.disconnect();
+    // },
+
     connect: function(ip){
         console.log('Connecting to ip:', ip);
         this._sgClient = new Smartglass();
-        this._sgClient.connect('192.168.2.5').then(function(){
+        this._sgClient.connect(ip).then(function(){
             console.log('Xbox succesfully connected!');
             this._sgClient.addManager('system_input', SystemInputChannel())
             this._sgClient.addManager('system_media', SystemMediaChannel())
@@ -115,9 +137,157 @@ module.exports = {
                     document.getElementById('currentApp').innerHTML = message.packet_decoded.protected_payload.apps[0].aum_id
                 }
             })
+
+            this._sgClient.on('_on_timeout', function(message, xbox, remote, smartglass){
+                console.log('Client timeout. Reconnecting...')
+                // this.disconnect();
+                this.connect(ip)
+            }.bind(this))
         }.bind(this)).catch(function(error){
             console.log('app.connect error:', error)
         });;
+    },
+
+    userAuth: function(){
+        this.loadView('userauth')
+
+        // setTimeout(function(){
+        //     shell.openExternal('https://login.live.com/oauth20_authorize.srf?client_id=0000000048093EE3&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf&response_type=token&display=touch&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&locale=en');
+        // }, 3000)
+    },
+
+    userAuthUrl: function(url){
+        console.log('got url:', url)
+
+        var format_querystring = url.split('#')
+        var results = querystring.parse(format_querystring[1])
+
+        // console.log(results.access_token, results.refresh_token)
+        var token_store = TokenStore()
+        token_store.set('access_token', results.access_token)
+        token_store.set('refresh_token', results.refresh_token)
+
+        var client = XboxApiClient(token_store)
+        console.log('Attempting to login...')
+
+        // Check auth
+        client.authenticate().then(function(user_info){
+            console.log('Logged in as: '+user_info.gtg+'')
+
+            this.loadUser()
+        }.bind(this)).catch(function(error){
+            console.log('Authentication failed:', error)
+        })
+
+        // setTimeout(function(){
+        //     shell.openExternal('https://login.live.com/oauth20_authorize.srf?client_id=0000000048093EE3&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf&response_type=token&display=touch&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&locale=en');
+        // }, 3000)
+    },
+
+    loadUser: function(){
+
+        var token_store = TokenStore()
+        var client = XboxApiClient(token_store)
+
+        // console.log(token_store.tokens)
+
+        if(!token_store.tokens.user_token){
+
+            var html = '<li class="list-group-item" onclick="App.userAuth()">'
+                html += '<img class="img-circle media-object pull-left" src="assets/images/avatar.png" width="32" height="32">'
+                html += '  <div class="media-body">'
+                html += '    <strong>Not authenticated</strong>'
+                html += '    <p>Click here to authenticate</p>'
+                html += '  </div>'
+                html += '</li>'
+
+            document.getElementById('userAccounts').innerHTML = html
+
+        } else {
+
+            var html = '<li class="list-group-item">'
+                html += '<img class="img-circle media-object pull-left" src="assets/images/avatar.png" width="32" height="32">'
+                html += '  <div class="media-body">'
+                html += '    <strong>Authenticating...</strong>'
+                html += '    <p onclick="App.userAuth()">Click here to re-authenticate</p>'
+                html += '  </div>'
+                html += '</li>'
+
+            document.getElementById('userAccounts').innerHTML = html
+
+            client.authenticate().then(function(user_info){
+                token_store.save()
+                console.log('user_info', user_info)
+
+                var html = '<li class="list-group-item">'
+                    html += '<img class="img-circle media-object pull-left" id="user_avatar" src="assets/images/avatar.png" width="32" height="32">'
+                    html += '  <div class="media-body">'
+                    html += '    <strong>'+user_info.gtg+'</strong>'
+                    html += '    <p>User Online</p>'
+                    html += '  </div>'
+                    html += '</li>'
+
+                document.getElementById('userAccounts').innerHTML = html
+
+                client.provider('profile').get_gamertag_profile(user_info.gtg).then(function(data){
+                    document.getElementById('user_avatar').src = data.profileUsers[0].settings[1].value
+
+                    this.loadFriends()
+                }.bind(this)).catch(function(error){
+                    console.log('error', error)
+                })
+            }.bind(this)).catch(function(error){
+                console.log('error', error)
+            })
+        }
+
+    },
+
+    loadFriends: function(){
+        var token_store = TokenStore()
+        var client = XboxApiClient(token_store)
+
+        console.log('token_store',token_store)
+
+        client.authenticate().then(function(user_info){
+            document.getElementById('friendAccounts').innerHTML = ''
+
+            client.provider('social').get('/users/me/people?view=Online').then(function(friends){
+
+                for(let friend in friends.people){
+
+                    client.provider('profile').get_user_profile(friends.people[friend].xuid).then(function(data){
+
+                        var html = '<li class="list-group-item">'
+                            html += '<img class="img-circle media-object pull-left" id="user_avatar" src='+data.profileUsers[0].settings[1].value+' width="32" height="32">'
+                            html += '  <div class="media-body">'
+                            html += '    <strong>'+data.profileUsers[0].settings[0].value+'</strong>'
+                            html += '    <p>User Online</p>'
+                            html += '  </div>'
+                            html += '</li>'
+
+                        document.getElementById('friendAccounts').innerHTML = document.getElementById('friendAccounts').innerHTML+html
+
+                    }.bind(this)).catch(function(error){
+                        console.log('error', error)
+                    })
+
+                }
+            }).catch(function(error){
+                console.log('error', error)
+            })
+        }).catch(function(error){
+            console.log(error)
+        })
+    },
+
+    loadView: function(view){
+        fetch('assets/pages/'+view+'.html')
+        .then((response) => {
+            response.text().then(function(data){
+                document.getElementById('content').innerHTML = data
+            });
+        });
     }
 
 }
