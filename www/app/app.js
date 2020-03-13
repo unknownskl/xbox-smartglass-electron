@@ -199,6 +199,16 @@ module.exports = {
         // }, 3000)
     },
 
+    loadIrConfiguration: function(callback){
+        this._sgClient.getManager('tv_remote').getConfiguration().then(function(configuration){
+            console.log('configuration', configuration)
+            callback(configuration)
+        }, function(error){
+            console.log('error', error)
+        });
+
+    },
+
     loadUser: function(){
 
         var token_store = TokenStore()
@@ -310,6 +320,19 @@ module.exports = {
         .then((response) => {
             response.text().then(function(data){
                 document.getElementById('content').innerHTML = data
+
+                const scriptPromise = new Promise((resolve, reject) => {
+                  const script = document.createElement('script');
+                  document.body.appendChild(script);
+                  script.onload = resolve;
+                  script.onerror = reject;
+                  script.async = true;
+                  script.src = 'assets/pages/'+view+'.js';
+                });
+
+                scriptPromise.then(() => {
+
+                });
 
                 if(callback != undefined){
                     callback()
