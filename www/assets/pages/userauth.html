@@ -11,6 +11,6 @@
             <textarea name="auth-uri" id="auth-uri" class="form-control" rows="3"></textarea>
         </div>
 
-        <button class="btn btn-large btn-default" onclick="App.userAuthUrl(document.getElementById('auth-uri').value)">Authenticate</button>
+        <button class="btn btn-large btn-default" onclick="App.userAuthUrl(document.getElementById('auth-uri').value, function(){ App.loadView('home') }, function(){ alert('Failed to authenticate') })">Authenticate</button>
     </form>
 </div>

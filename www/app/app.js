@@ -17,6 +17,7 @@ module.exports = {
 
     start: function(){
 
+        this.loadView('home')
         this.loadUser()
         this.scan()
 
@@ -95,7 +96,7 @@ module.exports = {
                 console.log('  Address: '+ consoles[xbox].remote.address + ':' + consoles[xbox].remote.port);
 
                 var button = document.createElement("a");
-                button.setAttribute("onclick", 'this.setAttribute("class", "nav-group-item active"); App.connect("'+consoles[xbox].remote.address+'");')
+                button.setAttribute("onclick", 'this.setAttribute("class", "nav-group-item active"); App.connect("'+consoles[xbox].remote.address+'", "'+consoles[xbox].message.name+'");')
                 button.setAttribute("class", 'nav-group-item')
                 button.innerHTML = '<span class="icon icon-home"></span>'
                 button.appendChild(document.createTextNode(consoles[xbox].message.name));
@@ -122,7 +123,7 @@ module.exports = {
     //     this._sgClient.disconnect();
     // },
 
-    connect: function(ip){
+    connect: function(ip, name){
         console.log('Connecting to ip:', ip);
         this._sgClient = new Smartglass();
         this._sgClient.connect(ip).then(function(){
@@ -137,6 +138,10 @@ module.exports = {
                 if(message.packet_decoded.protected_payload.apps[0] != undefined){
 
                     this.setConsoleStatus(message.packet_decoded.protected_payload)
+
+                    this.loadView('xbox', function(){
+                        document.getElementById('xbox-name').innerHTML = name
+                    }.bind(this))
                     // document.getElementById('currentApp').innerHTML = message.packet_decoded.protected_payload.apps[0].aum_id
                 }
             }.bind(this))
@@ -159,7 +164,7 @@ module.exports = {
         // }, 3000)
     },
 
-    userAuthUrl: function(url){
+    userAuthUrl: function(url, success_callback, error_callback){
         console.log('got url:', url)
 
         var format_querystring = url.split('#')
@@ -167,8 +172,12 @@ module.exports = {
 
         // console.log(results.access_token, results.refresh_token)
         var token_store = TokenStore()
+        console.log(token_store)
         token_store.set('access_token', results.access_token)
         token_store.set('refresh_token', results.refresh_token)
+        token_store.delete('user_token')
+        token_store.delete('xsts_token')
+        token_store.save()
 
         this._webClient = XboxApiClient(token_store)
         console.log('Attempting to login...')
@@ -177,10 +186,12 @@ module.exports = {
         this._webClient.authenticate().then(function(user_info){
             console.log('Logged in as: '+user_info.gtg+'')
             token_store.save()
+            success_callback()
 
             this.loadUser()
         }.bind(this)).catch(function(error){
             console.log('Authentication failed:', error)
+            error_callback()
         })
 
         // setTimeout(function(){
@@ -237,10 +248,20 @@ module.exports = {
                     // Auth ok..  Load friends..
                     // this.loadFriends()
                 }.bind(this)).catch(function(error){
-                    console.log('error', error)
+                    console.log('error fail_load_profile', error)
                 })
             }.bind(this)).catch(function(error){
-                console.log('error', error)
+                console.log('error recovery_fail', error)
+
+                var html = '<li class="list-group-item">'
+                    html += '<img class="img-circle media-object pull-left" src="assets/images/avatar.png" width="32" height="32">'
+                    html += '  <div class="media-body">'
+                    html += '    <strong>Failed to authenticate. Token expired</strong>'
+                    html += '    <p onclick="App.userAuth()">Click here to re-authenticate</p>'
+                    html += '  </div>'
+                    html += '</li>'
+
+                document.getElementById('userAccounts').innerHTML = html
             })
         }
 
@@ -284,11 +305,15 @@ module.exports = {
     //     })
     // },
 
-    loadView: function(view){
+    loadView: function(view, callback){
         fetch('assets/pages/'+view+'.html')
         .then((response) => {
             response.text().then(function(data){
                 document.getElementById('content').innerHTML = data
+
+                if(callback != undefined){
+                    callback()
+                }
             });
         });
     },
