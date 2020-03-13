@@ -12,6 +12,7 @@ var shell = require('electron').shell;
 module.exports = {
 
     _sgClient: false,
+    _webClient: false,
     _authWindow: false,
 
     start: function(){
@@ -130,13 +131,15 @@ module.exports = {
             this._sgClient.addManager('system_media', SystemMediaChannel())
             this._sgClient.addManager('tv_remote', TvRemoteChannel())
 
-            document.getElementById('connectionStatus').innerHTML = 'Connected'
+            // document.getElementById('connectionStatus').innerHTML = 'Connected'
 
             this._sgClient.on('_on_console_status', function(message, xbox, remote, smartglass){
                 if(message.packet_decoded.protected_payload.apps[0] != undefined){
-                    document.getElementById('currentApp').innerHTML = message.packet_decoded.protected_payload.apps[0].aum_id
+
+                    this.setConsoleStatus(message.packet_decoded.protected_payload)
+                    // document.getElementById('currentApp').innerHTML = message.packet_decoded.protected_payload.apps[0].aum_id
                 }
-            })
+            }.bind(this))
 
             this._sgClient.on('_on_timeout', function(message, xbox, remote, smartglass){
                 console.log('Client timeout. Reconnecting...')
@@ -167,12 +170,13 @@ module.exports = {
         token_store.set('access_token', results.access_token)
         token_store.set('refresh_token', results.refresh_token)
 
-        var client = XboxApiClient(token_store)
+        this._webClient = XboxApiClient(token_store)
         console.log('Attempting to login...')
 
         // Check auth
-        client.authenticate().then(function(user_info){
+        this._webClient.authenticate().then(function(user_info){
             console.log('Logged in as: '+user_info.gtg+'')
+            token_store.save()
 
             this.loadUser()
         }.bind(this)).catch(function(error){
@@ -187,7 +191,7 @@ module.exports = {
     loadUser: function(){
 
         var token_store = TokenStore()
-        var client = XboxApiClient(token_store)
+        this._webClient = XboxApiClient(token_store)
 
         // console.log(token_store.tokens)
 
@@ -215,24 +219,23 @@ module.exports = {
 
             document.getElementById('userAccounts').innerHTML = html
 
-            client.authenticate().then(function(user_info){
+            this._webClient.authenticate().then(function(user_info){
                 token_store.save()
                 console.log('user_info', user_info)
 
-                var html = '<li class="list-group-item">'
-                    html += '<img class="img-circle media-object pull-left" id="user_avatar" src="assets/images/avatar.png" width="32" height="32">'
-                    html += '  <div class="media-body">'
-                    html += '    <strong>'+user_info.gtg+'</strong>'
-                    html += '    <p>User Online</p>'
-                    html += '  </div>'
-                    html += '</li>'
+                this._webClient.provider('profile').get_gamertag_profile(user_info.gtg).then(function(data){
+                    var html = '<li class="list-group-item">'
+                        html += '<img class="img-circle media-object pull-left" id="user_avatar" src="'+data.profileUsers[0].settings[1].value+'" width="32" height="32">'
+                        html += '  <div class="media-body">'
+                        html += '    <strong>'+user_info.gtg+'</strong>'
+                        html += '    <p>User Online</p>'
+                        html += '  </div>'
+                        html += '</li>'
 
-                document.getElementById('userAccounts').innerHTML = html
+                    document.getElementById('userAccounts').innerHTML = html
 
-                client.provider('profile').get_gamertag_profile(user_info.gtg).then(function(data){
-                    document.getElementById('user_avatar').src = data.profileUsers[0].settings[1].value
-
-                    this.loadFriends()
+                    // Auth ok..  Load friends..
+                    // this.loadFriends()
                 }.bind(this)).catch(function(error){
                     console.log('error', error)
                 })
@@ -243,43 +246,43 @@ module.exports = {
 
     },
 
-    loadFriends: function(){
-        var token_store = TokenStore()
-        var client = XboxApiClient(token_store)
-
-        console.log('token_store',token_store)
-
-        client.authenticate().then(function(user_info){
-            document.getElementById('friendAccounts').innerHTML = ''
-
-            client.provider('social').get('/users/me/people?view=Online').then(function(friends){
-
-                for(let friend in friends.people){
-
-                    client.provider('profile').get_user_profile(friends.people[friend].xuid).then(function(data){
-
-                        var html = '<li class="list-group-item">'
-                            html += '<img class="img-circle media-object pull-left" id="user_avatar" src='+data.profileUsers[0].settings[1].value+' width="32" height="32">'
-                            html += '  <div class="media-body">'
-                            html += '    <strong>'+data.profileUsers[0].settings[0].value+'</strong>'
-                            html += '    <p>User Online</p>'
-                            html += '  </div>'
-                            html += '</li>'
-
-                        document.getElementById('friendAccounts').innerHTML = document.getElementById('friendAccounts').innerHTML+html
-
-                    }.bind(this)).catch(function(error){
-                        console.log('error', error)
-                    })
-
-                }
-            }).catch(function(error){
-                console.log('error', error)
-            })
-        }).catch(function(error){
-            console.log(error)
-        })
-    },
+    // loadFriends: function(){
+    //     var token_store = TokenStore()
+    //     var client = XboxApiClient(token_store)
+    //
+    //     console.log('token_store',token_store)
+    //
+    //     client.authenticate().then(function(user_info){
+    //         document.getElementById('friendAccounts').innerHTML = ''
+    //
+    //         client.provider('social').get('/users/me/people').then(function(friends){
+    //
+    //             for(let friend in friends.people){
+    //
+    //                 client.provider('profile').get_user_profile(friends.people[friend].xuid).then(function(data){
+    //
+    //                     var html = '<li class="list-group-item">'
+    //                         html += '<img class="img-circle media-object pull-left" id="user_avatar" src='+data.profileUsers[0].settings[1].value+' width="32" height="32">'
+    //                         html += '  <div class="media-body">'
+    //                         html += '    <strong>'+data.profileUsers[0].settings[0].value+'</strong>'
+    //                         html += '    <p>User Online</p>'
+    //                         html += '  </div>'
+    //                         html += '</li>'
+    //
+    //                     document.getElementById('friendAccounts').innerHTML = document.getElementById('friendAccounts').innerHTML+html
+    //
+    //                 }.bind(this)).catch(function(error){
+    //                     console.log('error', error)
+    //                 })
+    //
+    //             }
+    //         }).catch(function(error){
+    //             console.log('error', error)
+    //         })
+    //     }).catch(function(error){
+    //         console.log(error)
+    //     })
+    // },
 
     loadView: function(view){
         fetch('assets/pages/'+view+'.html')
@@ -288,6 +291,32 @@ module.exports = {
                 document.getElementById('content').innerHTML = data
             });
         });
+    },
+
+    setConsoleStatus: function(status){
+        console.log('status', status)
+
+        this._webClient.provider('titlehub').get_title(status.apps[0].title_id).then(function(response){
+
+            console.log('Loaded title:', response)
+            var current_title = response.titles[0]
+
+            var html = '<div class="toolbar-actions" id="consoleStatus">'
+                html += '   <img src="'+current_title.displayImage+'" class="status-image"/>'
+                html += '   <div class="media_status">'
+                html += '       <h1>'+current_title.name+' <small>('+current_title.type+')</small></h1>'
+                html += '       <p>'
+                html += '           Publisher: '+current_title.detail.publisherName+'<br />'
+
+                if(current_title.detail.developerName)
+                    html += '           Developer: '+current_title.detail.developerName+''
+
+                html += '       </p>'
+                html += '   </div>'
+                html += '</div>'
+
+            document.getElementById('footer').innerHTML = html
+        }.bind(this))
     }
 
 }
