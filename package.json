@@ -6,14 +6,15 @@
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "run-os",
+    "build": "electron-builder --mac --windows --linux",
     "build:win32": "electron-builder --win",
     "build:darwin": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
     "clean": "rimraf ./dist",
-    "release": "electron-builder --publish always"
+    "release": "electron-builder --mac --windows --linux --publish always"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^5.0.2",
     "electron-builder": "^21.2.0"
