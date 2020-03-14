@@ -1,0 +1,31 @@
+{
+  "name": "Xbox-One-Electron",
+  "version": "0.1.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder --mac && mkdir dist/_publish && cp dist/*.dmg dist/_publish/",
+    "build:win32": "electron-builder --win",
+    "build:darwin": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "clean": "rimraf ./dist",
+    "release": "electron-builder --mac --windows --linux --publish always"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^5.0.2",
+    "electron-builder": "^21.2.0"
+  },
+  "dependencies": {
+    "xbox-smartglass-core-node": "^0.6.3",
+    "xbox-webapi": "^0.1.1"
+  },
+  "build": {
+    "appId": "com.unknownskl.xbox-one-electron",
+    "productName": "Xbox-One Electron",
+    "copyright": "MIT"
+  }
+}
