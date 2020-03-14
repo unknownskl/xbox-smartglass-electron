@@ -37,7 +37,7 @@
     color: #ffffff;
 }
 
-.nav-group-item.active {
+.nav-group-item.active, .nav-group-item:hover {
     background-color: #535057;
 }
 
