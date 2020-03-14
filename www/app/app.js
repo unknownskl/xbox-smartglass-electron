@@ -6,6 +6,9 @@ var TvRemoteChannel = require('xbox-smartglass-core-node/src/channels/tvremote')
 var XboxApiClient = require('xbox-webapi');
 var TokenStore = require('xbox-webapi/src/tokenstore.js');
 
+const Store = require('electron-store');
+const appStorage = new Store();
+
 const querystring = require('querystring');
 var shell = require('electron').shell;
 
@@ -174,13 +177,14 @@ module.exports = {
         var results = querystring.parse(format_querystring[1])
 
         // console.log(results.access_token, results.refresh_token)
-        var token_store = TokenStore()
+        var token_store = TokenStore(appStorage.path.substr(0, appStorage.path.length-11)+'.tokens.json')
         console.log(token_store)
         token_store.set('access_token', results.access_token)
         token_store.set('refresh_token', results.refresh_token)
         token_store.delete('user_token')
         token_store.delete('xsts_token')
         token_store.save()
+        console.log('token_store saved', token_store)
 
         this._webClient = XboxApiClient(token_store)
         console.log('Attempting to login...')
@@ -189,6 +193,7 @@ module.exports = {
         this._webClient.authenticate().then(function(user_info){
             console.log('Logged in as: '+user_info.gtg+'')
             token_store.save()
+            console.log('token_store saved', token_store)
             success_callback()
 
             this.loadUser()
@@ -214,10 +219,10 @@ module.exports = {
 
     loadUser: function(){
 
-        var token_store = TokenStore()
+        var token_store = TokenStore(appStorage.path.substr(0, appStorage.path.length-11)+'.tokens.json')
         this._webClient = XboxApiClient(token_store)
 
-        // console.log(token_store.tokens)
+        console.log('token_store', token_store)
 
         if(!token_store.tokens.user_token){
 
@@ -245,6 +250,7 @@ module.exports = {
 
             this._webClient.authenticate().then(function(user_info){
                 token_store.save()
+                console.log('token_store saved', token_store)
                 console.log('user_info', user_info)
 
                 this._webClient.provider('profile').get_gamertag_profile(user_info.gtg).then(function(data){
@@ -281,7 +287,7 @@ module.exports = {
     },
 
     // loadFriends: function(){
-    //     var token_store = TokenStore()
+    //     var token_store = TokenStore(appStorage.path.substr(0, appStorage.path.length-11)+'.tokens.json')
     //     var client = XboxApiClient(token_store)
     //
     //     console.log('token_store',token_store)
