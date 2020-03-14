@@ -139,9 +139,7 @@ module.exports = {
 
                     this.setConsoleStatus(message.packet_decoded.protected_payload)
 
-                    this.loadView('xbox', function(){
-                        document.getElementById('xbox-name').innerHTML = name
-                    }.bind(this))
+
                     // document.getElementById('currentApp').innerHTML = message.packet_decoded.protected_payload.apps[0].aum_id
                 }
             }.bind(this))
@@ -151,6 +149,11 @@ module.exports = {
                 // this.disconnect();
                 this.connect(ip)
             }.bind(this))
+
+            this.loadView('xbox', function(){
+                document.getElementById('xbox-name').innerHTML = name
+            }.bind(this))
+
         }.bind(this)).catch(function(error){
             console.log('app.connect error:', error)
         });;
@@ -365,6 +368,14 @@ module.exports = {
 
             document.getElementById('footer').innerHTML = html
         }.bind(this))
+    },
+
+    sendIrCommand: function(button, device_id){
+        this._sgClient.getManager('tv_remote').sendIrCommand(button, device_id).then(function(button){
+            console.log(button)
+        }, function(error){
+            console.log(error)
+        });
     }
 
 }

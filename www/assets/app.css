@@ -1,5 +1,38 @@
-div#content h2 {
+div#content h2, div#content h3, div#content h4 {
     font-weight: normal;
+}
+
+
+div.tabs-vertical ul.tabs {
+    float: left;
+    width: 20%;
+    list-style: none;
+    padding: 0px;
+    margin: 0px
+}
+
+div.tabs-vertical ul.tabs li a {
+    display: block;
+    color: #ffffff;
+    font-size: 18px;
+    padding: 10px;
+    text-decoration: none;
+}
+
+div.tabs-vertical ul.tabs li a:hover, div.tabs-vertical ul.tabs li.active a:hover {
+    background-color: #323232;
+}
+
+div.tabs-vertical div.tabs-content {
+    background-color: #323232;
+    float: right;
+    width: 80%;
+    padding-left: 20px;
+    min-height: 160px;
+}
+
+div.tabs-content div.remote-buttons button {
+    padding: 10px
 }
 
 
