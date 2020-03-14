@@ -1,6 +1,6 @@
 {
   "name": "Xbox-One-Electron",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "xbox-smartglass-core-node": "^0.6.3",
-    "xbox-webapi": "^0.1.1"
+    "xbox-webapi": "^0.1.1",
+    "minimist": ">=1.2.2"
   },
   "build": {
     "appId": "com.unknownskl.xbox-one-electron",
