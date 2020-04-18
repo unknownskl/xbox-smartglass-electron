@@ -128,8 +128,22 @@ module.exports = {
 
     connect: function(ip, name){
         console.log('Connecting to ip:', ip);
+
+        // Check auth
+        var uhs = undefined
+        var jwt = undefined
+
+        var token_store = TokenStore(appStorage.path.substr(0, appStorage.path.length-11)+'.tokens.json')
+        token_store.load()
+        var xsts_token = token_store.get('xsts_token')
+
+        uhs = xsts_token.DisplayClaims.xui[0].uhs
+        jwt = xsts_token.Token
+
+        console.log('XSTS TOKEN:', token_store.get('xsts_token'))
+
         this._sgClient = new Smartglass();
-        this._sgClient.connect(ip).then(function(){
+        this._sgClient.connect(ip, uhs, jwt).then(function(){
             console.log('Xbox succesfully connected!');
             this._sgClient.addManager('system_input', SystemInputChannel())
             this._sgClient.addManager('system_media', SystemMediaChannel())
@@ -379,6 +393,14 @@ module.exports = {
     sendIrCommand: function(button, device_id){
         this._sgClient.getManager('tv_remote').sendIrCommand(button, device_id).then(function(button){
             console.log(button)
+        }, function(error){
+            console.log(error)
+        });
+    },
+
+    recordGameDvr: function(){
+        this._sgClient.recordGameDvr().then(function(status){
+            console.log(status)
         }, function(error){
             console.log(error)
         });
