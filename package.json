@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "electron-builder && mkdir -p dist/_publish && cp dist/*.dmg dist/_publish/",
+    "build": "electron-builder",
     "build:win32": "electron-builder --win",
     "build:darwin": "electron-builder --mac",
     "build:linux": "electron-builder --linux",
