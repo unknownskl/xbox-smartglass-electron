@@ -57,45 +57,45 @@ function drawRemoteButtons(configuration) {
     for(button in configuration.buttons){
         switch(button) {
             case 'btn.vol_up':
-                buttons_volume += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_volume += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
             case 'btn.vol_down':
-                buttons_volume += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_volume += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
             case 'btn.vol_mute':
-                buttons_volume += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_volume += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
 
             case 'btn.ch_down':
-                buttons_channels += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_channels += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
             case 'btn.ch_up':
-                buttons_channels += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_channels += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
 
             case 'btn.back':
-                buttons_control += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_control += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
             case 'btn.menu':
-                buttons_control += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_control += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
             case 'btn.power':
-                buttons_control += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_control += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
             case 'btn.up':
-                buttons_control += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_control += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
             case 'btn.down':
-                buttons_control += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_control += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
             case 'btn.left':
-                buttons_control += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_control += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
             case 'btn.right':
-                buttons_control += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_control += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
                 break;
             default:
-                buttons_other += ' <button onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
+                buttons_other += ' <button class="btn btn-large btn-default" onclick="App.sendIrCommand(\''+button+'\', \''+configuration.device_id+'\')">'+configuration.buttons[button]+'</button>'
         }
     }
 

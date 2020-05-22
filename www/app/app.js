@@ -18,6 +18,8 @@ module.exports = {
     _webClient: false,
     _authWindow: false,
 
+    _status: {},
+
     start: function(){
 
         this.loadView('home')
@@ -122,9 +124,11 @@ module.exports = {
         });
     },
 
-    // disconnect: function(){
-    //     this._sgClient.disconnect();
-    // },
+    disconnect: function(){
+        this._sgClient.disconnect();
+        document.getElementById('consoleStatus').remove()
+        this.loadView('home')
+    },
 
     connect: function(ip, name){
         console.log('Connecting to ip:', ip);
@@ -151,11 +155,16 @@ module.exports = {
 
             // document.getElementById('connectionStatus').innerHTML = 'Connected'
 
+            this._sgClient.on('_on_media_state', function(message, xbox, remote, smartglass){
+                // console.log('Media state:', message)
+                this._status.media_state = message.packet_decoded.protected_payload
+                this.setConsoleStatus()
+            }.bind(this))
+
             this._sgClient.on('_on_console_status', function(message, xbox, remote, smartglass){
                 if(message.packet_decoded.protected_payload.apps[0] != undefined){
-
-                    this.setConsoleStatus(message.packet_decoded.protected_payload)
-
+                    this._status.console_status = message.packet_decoded.protected_payload
+                    this.setConsoleStatus()
 
                     // document.getElementById('currentApp').innerHTML = message.packet_decoded.protected_payload.apps[0].aum_id
                 }
@@ -364,8 +373,12 @@ module.exports = {
         });
     },
 
-    setConsoleStatus: function(status){
+    setConsoleStatus: function(){
+
+        var status = this._status.console_status
+        var media_state = this._status.media_state
         console.log('status', status)
+        console.log('media_state', media_state)
 
         this._webClient.provider('titlehub').get_title(status.apps[0].title_id).then(function(response){
 
@@ -384,6 +397,31 @@ module.exports = {
 
                 html += '       </p>'
                 html += '   </div>'
+
+                if(media_state !=  undefined){
+                    html += '   <div class="media_state">'
+                    html += '       <p>'
+                    html += '           App: '+media_state.aum_id+'<br />'
+                    html += '           media_type: '+media_state.media_type+'<br />'
+                    html += '           sound_level: '+media_state.sound_level+'<br />'
+                    html += '           playback_status: '+media_state.playback_status+'<br />'
+                    html += '           <br />'
+
+                    for(meta in media_state.metadata){
+                        html += '           metadata['+media_state.metadata[meta].name+']: '+media_state.metadata[meta].value+'<br />'
+                    }
+
+                    html += '       </p>'
+                    html += '   </div>'
+                } else {
+
+                    // html += '   <div class="media_state">'
+                    // html += '       <p>'
+                    // html += '           No media is currently playing'
+                    // html += '       </p>'
+                    // html += '   </div>'
+                }
+
                 html += '</div>'
 
             document.getElementById('footer').innerHTML = html
