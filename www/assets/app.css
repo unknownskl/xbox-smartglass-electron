@@ -1,9 +1,33 @@
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #323232; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #555; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+
 div#content h2, div#content h3, div#content h4 {
     font-weight: normal;
 }
 
 button.btn {
     background-color: #323232;
+}
+
+.sidebar {
+    overflow-y: scroll;
 }
 
 
@@ -41,6 +65,10 @@ div.tabs-content div.remote-buttons button {
     padding: 10px;
     color: #ffffff;
     margin-bottom: 5px;
+}
+
+li.list-group-item {
+    border-top: 0px !important;
 }
 
 

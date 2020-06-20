@@ -23,7 +23,7 @@
     "electron-store": "^5.1.1",
     "minimist": ">=1.2.2",
     "xbox-smartglass-core-node": "^0.6.4",
-    "xbox-webapi": "^0.1.1"
+    "xbox-webapi": "^0.1.2"
   },
   "build": {
     "appId": "com.unknownskl.xbox-one-electron",

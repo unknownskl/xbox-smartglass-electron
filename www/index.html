@@ -10,80 +10,70 @@
   </head>
   <body>
 
-      <div class="window">
+    <div class="window">
 
-          <header class="toolbar toolbar-header">
-              <div class="toolbar-actions">
-                  <div class="btn-group">
-                      <button class="btn btn-default btn-large" onclick="App.scan()">
-                          <span class="icon icon-arrows-ccw" style="color: #ffffff;"></span>
-                      </button>
-                  </div>
+      <header class="toolbar toolbar-header">
+          <div class="toolbar-actions">
+              <div class="btn-group">
+                  <button class="btn btn-default btn-large" onclick="App.scan()">
+                      <span class="icon icon-arrows-ccw" style="color: #ffffff;"></span>
+                  </button>
               </div>
-          </header>
+          </div>
+      </header>
 
-          <div class="window-content">
+      <div class="window-content">
 
-    <!-- <div id="topbar">
-
-    </div>
-
-    <div id="sidebar">
-        <ul class="options">
-            <li><a href="#" onclick="App.scan()">Scan</a></li>
-        </ul>
-
-        <ul class="consoles" id="consoleList">
-        </ul>
-    </div>
-
-    <div id="content">
-        <h1>Status: <span id="connectionStatus">Not Connected</span></h1>
-
-        <p id="currentApp">Not connected...</p>
-    </div> -->
         <div class="pane-sm sidebar">
 
-            <nav class="nav-group">
-              <h5 class="nav-group-title">Available consoles</h5>
+          <nav class="nav-group">
+            <h5 class="nav-group-title">Available consoles</h5>
 
-              <div class="consoles" id="consoleList">
-              </div>
+            <div class="consoles" id="consoleList">
+            </div>
 
-              <!-- <a class="nav-group-item">
-                <span class="icon icon-home"></span>
-                Debug
-              </a>
-              <a class="nav-group-item active">
-                <span class="icon icon-home"></span>
-                Remote example
-              </a> -->
-            </nav>
+            <!-- <a class="nav-group-item">
+              <span class="icon icon-home"></span>
+              Debug
+            </a>
+            <a class="nav-group-item active">
+              <span class="icon icon-home"></span>
+              Remote example
+            </a> -->
+          </nav>
 
-            <nav class="nav-group">
-                <h5 class="nav-group-title">User account</h5>
+          <nav class="nav-group">
+            <h5 class="nav-group-title">User account</h5>
 
-                <ul class="list-group" id="userAccounts">
+            <ul class="list-group" id="userAccounts">
 
-                </ul>
-            </nav>
+            </ul>
+          </nav>
 
-            <!-- <nav class="nav-group">
-                <h5 class="nav-group-title">Friends</h5>
+          <nav class="nav-group">
+            <h5 class="nav-group-title">Online Friends</h5>
 
-                <ul class="list-group" id="friendAccounts">
+            <ul class="list-group" id="onlineFriendAccounts">
+              
+              Loading friends...
+            </ul>
 
-                </ul>
-            </nav> -->
+            <h5 class="nav-group-title">Offline Friends</h5>
+
+            <ul class="list-group" id="offlineFriendAccounts">
+              
+              Loading friends...
+            </ul>
+          </nav>
 
         </div>
+
         <div class="pane" id="content">
         </div>
+      </div>
 
-        </div>
-
-        <footer class="toolbar toolbar-footer" id="footer">
-        </footer>
+      <footer class="toolbar toolbar-footer" id="footer">
+      </footer>
     </div>
 
     <!-- <script src="app.js" charset="utf-8"></script> -->
