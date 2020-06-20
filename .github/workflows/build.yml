@@ -31,8 +31,16 @@ jobs:
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/') }}
 
-      - name: Publish artifacts
+      - name: Publish artifacts for MacOS
         uses: actions/upload-artifact@v1
         with:
-          name: release-${{ startsWith(github.ref, 'refs/tags/') }}
+          name: release-macos
+          path: dist/*.dmg
+        if: matrix.os == 'macOS-latest'
+
+      - name: Publish artifacts for Windows
+        uses: actions/upload-artifact@v1
+        with:
+          name: release-windows
           path: dist/
+        if: matrix.os == 'windows-latest'
