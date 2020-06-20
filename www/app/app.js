@@ -314,6 +314,11 @@ module.exports = {
     loadFriends: function(){
         var token_store = TokenStore(appStorage.path.substr(0, appStorage.path.length-11)+'.tokens.json')
         var client = XboxApiClient(token_store)
+
+        setTimeout(function(){
+            console.log('Updating friends status...')
+            this.loadFriends()
+        }.bind(this), 60000)
     
         console.log('token_store',token_store)
     
