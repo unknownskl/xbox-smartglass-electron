@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: release-macos
-          path: dist/*.dmg
+          path: dist/
         if: matrix.os == 'macOS-latest'
 
       - name: Publish artifacts for Windows
