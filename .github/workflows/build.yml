@@ -34,7 +34,7 @@ jobs:
       - name: Copy artifacts for publish
         run: |
           mkdir dist/_publish
-          cp dist/*.dmg dist/_publish/
+          cp dist/*.zip dist/_publish/
         if: matrix.os == 'macOS-latest'
 
       - name: Publish artifacts for MacOS
