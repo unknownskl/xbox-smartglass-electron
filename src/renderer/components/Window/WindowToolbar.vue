@@ -9,7 +9,9 @@
 
     <div class="profileInfo">
       <a @click="openProfileMenu()" class="btn">
+        <span>Login</span> 
         <i class="fa fa-users"></i>
+        <!-- <img class="avatar" src="https://images-eds-ssl.xboxlive.com/image?url=wHwbXKif8cus8csoZ03RW3apWESZjav65Yncai8aRmVbSlZ3zqRpg1sdxEje_JmFa22Nx4lq4eRvT2l.tSjwvnNyAJtubOw2ZQJwnjNptIy4M18xZQdwDKLtgQMt6SrdLNJYhz8lcDdzUtD4VWZEBK6K2QwWRlMdO.hBkC6XkA0-&format=png&h=100&w=100" /> -->
       </a>
     </div>
 
@@ -79,6 +81,18 @@
 
  #WindowToolbar div.profileInfo {
    float: right;
+ }
+
+ #WindowToolbar div.profileInfo span {
+   font-size: 15px;
+ }
+
+  #WindowToolbar div.profileInfo img.avatar {
+   height: 40px;
+   width: 40px;
+   float: right;
+   margin-top: -5px;
+   border-radius: 20px;
  }
 
 </style>

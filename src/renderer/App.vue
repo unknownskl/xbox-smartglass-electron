@@ -5,13 +5,13 @@
       <WindowToolbar></WindowToolbar>
     </div>
     <div id="appSidebar">
-      <UISidebar @refreshConsoleList="refreshConsoles()"></UISidebar>
+      <UISidebar></UISidebar>
     </div>
     <div id="appView">
       <router-view></router-view>
     </div>
     <div id="appFooter">
-      Footer
+      <UIConsoleStatus></UIConsoleStatus>
     </div>
   </div>
 </template>
@@ -21,13 +21,15 @@
   import WindowToolbar from './components/Window/WindowToolbar'
 
   import UISidebar from './components/UI/UISidebar'
+  import UIConsoleStatus from './components/UI/UIConsoleStatus'
 
   export default {
     name: 'xbox-smartglass-electron',
     components: {
       WindowTop,
       WindowToolbar,
-      UISidebar
+      UISidebar,
+      UIConsoleStatus
     }
   }
 </script>
