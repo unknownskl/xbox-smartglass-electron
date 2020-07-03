@@ -57,7 +57,7 @@ export default {
               // }
 
               console.log('xbox: Current active app:', message.packet_decoded.protected_payload)
-              app.$root.$emit('Smartglass_Console_Status', { address: remote, payload: message.packet_decoded.protected_payload })
+              app.$root.$emit('Smartglass_Console_Status', remote, message.packet_decoded.protected_payload)
             }
           }.bind(this))
 

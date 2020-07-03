@@ -10,3 +10,4 @@ thumbs.db
 !.gitkeep
 dist
 www_backup
+.tokens.json

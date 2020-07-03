@@ -3,14 +3,17 @@
     <ul class="uisidebar-ul">
       <li class="uisidebar-ul-header">Consoles</li>
 
+      <li class="uisidebar-ul-item-searching" v-if="isRefreshing">
+        <i class="fas fa-sync fa-spin fa-fw"></i> <span>Searching...</span>
+      </li>
+
       <UISidebarConsoleItem
-        v-show="!isRefreshing"
         v-for="console in this.consoles"
         :console="console"
         :key="console.address"></UISidebarConsoleItem>
 
-      <li class="uisidebar-ul-item-searching" v-show="isRefreshing">
-        <i class="fas fa-sync fa-spin fa-fw"></i> <span>Searching...</span>
+      <li class="uisidebar-ul-item-searching" v-if="(consolesFound == 0)">
+        <i class="fas fa-sync fa-spin fa-fw"></i> <span>No consoles found on network</span>
       </li>
     </ul>
 
@@ -33,7 +36,8 @@
     data: function () {
       return {
         consoles: [],
-        isRefreshing: true
+        isRefreshing: true,
+        consolesFound: -1
       }
     },
     methods: {
@@ -46,6 +50,7 @@
         var SGClient = global.SmartglassClient
         this.consoles = SGClient.devicesFound
 
+        this.consolesFound = this.consoles.length
         this.isRefreshing = false
       })
 

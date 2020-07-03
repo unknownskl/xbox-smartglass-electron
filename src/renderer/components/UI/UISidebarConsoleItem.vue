@@ -1,7 +1,7 @@
 <template>
   <li class="UISidebarConsoleItem" @click="connect($attrs.console.address)">
     <i class="fab fa-xbox"></i> {{ $attrs.console.name }}<br />
-    {{ $attrs.console.address }} - {{ isConnected }}
+    {{ $attrs.console.address }}
   </li>
 </template>
 
@@ -13,7 +13,7 @@
     // components: { SystemInformation },
     data: function () {
       return {
-        isConnected: false
+        // isConnected: false
       }
     },
     // computed: {
@@ -41,12 +41,10 @@
 
         SGClient.connect(address, app).then(function (sgInstance) {
           // console.log(consoles)
-          this.isConnected = true
+          // this.isConnected = true
           this.$root.$emit('Smartglass_Connect_Console_Successful', { address: address })
 
-          // SGClient.
-
-          this.$router.push({ path: '/' })
+          // this.$router.push({ path: '/' })
           this.$router.push({ path: '/xbox/' + address })
         }.bind(this)).catch(function (error) {
           console.log(error)
@@ -54,13 +52,15 @@
         })
 
         this.$root.$emit('Smartglass_Connect_Console', { address: address })
-      },
-      mounted () {
-        this.$root.$on('Smartglass_Console_Disconnect', (address) => {
-          console.log('Smartglass_Console_Disconnect', address)
-          this.isConnected = false
-        })
       }
+      // mounted () {
+      //   this.$root.$on('Smartglass_Console_Disconnect', (address) => {
+      //     console.log('Smartglass_Console_Disconnect @@@@@@@@@@@@@', address)
+      //     this.isConnected = false
+      //     this.$root.$emit('UISidebar_Refresh_Consoles')
+      //     this.$forceUpdate()
+      //   })
+      // }
     }
   }
 </script>

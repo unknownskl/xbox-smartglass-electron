@@ -22,6 +22,8 @@
 
         SGClient.disconnect(this.$route.params.address, app).then(function (status) {
           console.log(status)
+
+          // this.$root.$emit('Smartglass_Console_Disconnect', { address: this.$route.params.address })
           this.$router.push({ path: '/' })
         }.bind(this)).catch(function (error) {
           console.log(error)

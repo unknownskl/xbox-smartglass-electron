@@ -103,4 +103,56 @@
   ::-webkit-scrollbar-thumb:hover {
       background: #555; 
   }
+
+  #appView .btn {
+    display: inline-block;
+    padding: 3px 8px;
+    margin-bottom: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: default;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
+    -webkit-app-region: no-drag;
+  }
+  #appView .btn:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  #appView h1 {
+    padding-top: 20px;
+    font-weight: normal;
+    font-size: 20px;
+    padding-bottom: 10px;
+  }
+
+  #appView p {
+    padding-bottom: 10px;
+  }
+
+  #appView textarea {
+    background-color: #323232;
+    color: #ffffff;
+    border: 0px;
+    padding: 10px;
+  }
+
+  #appView button.btn {
+    margin-bottom: 10px;
+  }
+
+  #appView input[type=text] {
+    background-color: #323232;
+    color: #ffffff;
+    font-size: 14px;
+    border: 0px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
 </style>

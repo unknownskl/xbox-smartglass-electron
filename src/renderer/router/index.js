@@ -11,6 +11,16 @@ export default new Router({
       component: require('@/components/Views/Xbox').default
     },
     {
+      path: '/auth',
+      name: 'auth',
+      component: require('@/components/Views/Auth').default
+    },
+    {
+      path: '/myprofile',
+      name: 'profile',
+      component: require('@/components/Views/Profile').default
+    },
+    {
       path: '/',
       name: 'home',
       component: require('@/components/Home').default
