@@ -16,7 +16,7 @@
 
       <a @click="openProfile()" v-if="isAuthenticated" class="btn">
         <span>{{ userData.gtg }}</span>
-        <img class="avatar" src="https://images-eds-ssl.xboxlive.com/image?url=wHwbXKif8cus8csoZ03RW3apWESZjav65Yncai8aRmVbSlZ3zqRpg1sdxEje_JmFa22Nx4lq4eRvT2l.tSjwvnNyAJtubOw2ZQJwnjNptIy4M18xZQdwDKLtgQMt6SrdLNJYhz8lcDdzUtD4VWZEBK6K2QwWRlMdO.hBkC6XkA0-&format=png&h=100&w=100" />
+        <img class="avatar" v-bind:src="avatarUrl" />
       </a>
     </div>
 
@@ -32,7 +32,8 @@
     data: function () {
       return {
         isAuthenticated: false,
-        userData: false
+        userData: false,
+        avatarUrl: false
       }
     },
     methods: {
@@ -61,6 +62,12 @@
       global.XboxApiClient.authenticate().then(function (userdata) {
         this.isAuthenticated = true
         this.userData = userdata
+
+        global.XboxApiClient.provider('profile').get_gamertag_profile(userdata.gtg).then(function (data) {
+          this.avatarUrl = data.profileUsers[0].settings[1].value
+          console.log('this.userProfile', this.userProfile)
+        }.bind(this))
+
         console.log(userdata)
       }.bind(this)).catch(function (error) {
         this.isAuthenticated = false
