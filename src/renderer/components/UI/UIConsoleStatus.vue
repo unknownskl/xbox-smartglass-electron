@@ -9,8 +9,12 @@
     <div class="tab-content" v-for="(console, index) in this.consoles" v-bind:key="index">
 
       <div class="app-details" v-if="!console.app_profile">
-        {{ JSON.stringify(console) }}<br />
-        Application: {{ console.apps[0].aum_id }}
+        <div class="app-text">
+          <p>
+            Application: {{ console.apps[0].aum_id }} 
+            <small>(Login to get more app details)</small>
+          </p>
+        </div>
       </div>
 
       <div class="app-details" v-if="console.app_profile">
@@ -53,14 +57,16 @@ export default {
       console.log('Smartglass_Console_Status event@2', address.address, payload)
       this.consoles[address.address] = payload
 
-      global.XboxApiClient.provider('titlehub').get_title(payload.apps[0].title_id).then(function (data) {
-        this.consoles[address.address].app_profile = data
-        console.log('this.consoles[address.address].app_profile', this.consoles[address.address].app_profile)
+      global.XboxApiClient.authenticate().then(function () {
+        global.XboxApiClient.provider('titlehub').get_title(payload.apps[0].title_id).then(function (data) {
+          this.consoles[address.address].app_profile = data
+          console.log('this.consoles[address.address].app_profile', this.consoles[address.address].app_profile)
+          this.$forceUpdate()
+        }.bind(this))
+      }.bind(this)).catch(function (error) {
+        console.log('error', error)
         this.$forceUpdate()
       }.bind(this))
-
-      // console.log('this.consoles', this.consoles)
-      // this.$forceUpdate()
     })
 
     this.$root.$on('Smartglass_Console_Disconnect', (address) => {
