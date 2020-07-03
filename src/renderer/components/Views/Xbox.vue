@@ -1,8 +1,8 @@
 <template>
   <div>
-      <p>
+      <h1>
         Xbox view: {{ $route.params.address }}
-      </p>
+      </h1>
 
       <button href="#" @click="disconnect()" class="btn">
         Disconnect

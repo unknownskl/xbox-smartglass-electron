@@ -62,7 +62,7 @@
   #appSidebar {
     position: absolute;
     top: 70px;
-    bottom: 0px;
+    bottom: 200px;
     left: 0px;
     width: 300px;
     overflow-y: scroll;
@@ -71,9 +71,10 @@
   #appView {
     position: absolute;
     top: 70px;
-    bottom: 0px;
+    bottom: 200px;
     left: 300px;
     right: 0px;
+    padding-left: 20px;
     overflow-y: scroll;
   }
 
@@ -82,6 +83,8 @@
     left: 0px;
     right: 0px;
     bottom: 0px;
+    height: 200px;
+    overflow-y: hidden;
   }
 
   /* width */
@@ -96,7 +99,7 @@
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-      background: #444; 
+      background: #282828; 
   }
 
   /* Handle on hover */

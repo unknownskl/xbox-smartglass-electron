@@ -93,6 +93,7 @@
  li.UISidebarUserItem div.user-image img.avatar {
     width: 40px;
     height: 40px;
+    border-radius: 20px;
  }
 
  li.UISidebarUserItem div.user-image {
