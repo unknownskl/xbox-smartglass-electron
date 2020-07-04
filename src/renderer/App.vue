@@ -76,6 +76,7 @@
     right: 0px;
     padding-left: 20px;
     overflow-y: scroll;
+    padding-bottom: 20px;
   }
 
   #appFooter {
@@ -132,6 +133,12 @@
     padding-top: 20px;
     font-weight: normal;
     font-size: 20px;
+    padding-bottom: 10px;
+  }
+
+  #appView h2 {
+    font-weight: normal;
+    font-size: 18px;
     padding-bottom: 10px;
   }
 

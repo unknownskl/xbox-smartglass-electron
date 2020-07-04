@@ -32,7 +32,11 @@ export default {
     }.bind(this))
   },
 
-  connect (ip, app) {
+  getConnection (address) {
+    return this.clients[address]
+  },
+
+  connect (ip, name, app) {
     console.log(this.clients)
 
     return new Promise(function (resolve, reject) {
@@ -42,7 +46,8 @@ export default {
         this.clients[ip] = {
           client: Smartglass(),
           console_status: {},
-          media_status: {}
+          media_status: {},
+          name: name
         }
 
         this.clients[ip].client.connect(ip).then(function () {

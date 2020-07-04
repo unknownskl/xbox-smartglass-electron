@@ -2,7 +2,7 @@
   <div id="UIConsoleStatus">
     <ul class="tab-list">
       <li v-for="(console, index) in this.consoles" v-bind:key="index">
-        <a href="#">{{ index }}</a>
+        <a href="#">{{ getConnectionName(index) }}</a>
       </li>
     </ul>
 
@@ -50,6 +50,10 @@ export default {
   methods: {
     open (link) {
       this.$electron.shell.openExternal(link)
+    },
+    getConnectionName (address) {
+      var sgClient = global.SmartglassClient.getConnection(address)
+      return sgClient.name
     }
   },
   mounted () {
@@ -61,6 +65,7 @@ export default {
         global.XboxApiClient.provider('titlehub').get_title(payload.apps[0].title_id).then(function (data) {
           this.consoles[address.address].app_profile = data
           console.log('this.consoles[address.address].app_profile', this.consoles[address.address].app_profile)
+          this.$root.$emit('Smartglass_Console_Status_Details_Ready', address, this.consoles[address.address].app_profile)
           this.$forceUpdate()
         }.bind(this))
       }.bind(this)).catch(function (error) {
@@ -113,11 +118,12 @@ export default {
    border-bottom: 2px solid #107c10;
    text-decoration: none;
    color: #ffffff;
-   padding-top: 7px;
+   padding-top: 10px;
    padding-left: 5px;
    padding-right: 5px;
    margin-left: 5px;
    margin-right: 5px;
+   font-size: 13px;
  }
 
  #UIConsoleStatus .app-image {

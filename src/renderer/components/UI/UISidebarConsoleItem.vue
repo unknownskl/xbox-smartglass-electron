@@ -1,5 +1,5 @@
 <template>
-  <li class="UISidebarConsoleItem" @click="connect($attrs.console.address)">
+  <li class="UISidebarConsoleItem" @click="connect($attrs.console.address, $attrs.console.name)">
     <i class="fab fa-xbox"></i> {{ $attrs.console.name }}<br />
     {{ $attrs.console.address }}
   </li>
@@ -33,13 +33,13 @@
       open (link) {
         this.$electron.shell.openExternal(link)
       },
-      connect (address) {
+      connect (address, name) {
         console.log('Connect to ', address)
 
         var SGClient = global.SmartglassClient
         var app = this
 
-        SGClient.connect(address, app).then(function (sgInstance) {
+        SGClient.connect(address, name, app).then(function (sgInstance) {
           // console.log(consoles)
           // this.isConnected = true
           this.$root.$emit('Smartglass_Connect_Console_Successful', { address: address })
